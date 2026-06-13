@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Courier } from '@/lib/types';
 
 interface CourierComboboxProps {
@@ -9,6 +9,8 @@ interface CourierComboboxProps {
   onChange: (name: string, courierId: string | null) => void;
   label?: string;
   id?: string;
+  compact?: boolean;
+  placeholder?: string;
 }
 
 export function CourierCombobox({
@@ -17,9 +19,15 @@ export function CourierCombobox({
   onChange,
   label = 'Kurye (Şoför)',
   id = 'courierCombo',
+  compact = false,
+  placeholder = 'Listeden seçin veya yazın...',
 }: CourierComboboxProps) {
   const [input, setInput] = useState(value);
   const listId = `${id}-list`;
+
+  useEffect(() => {
+    setInput(value);
+  }, [value]);
 
   const activeNames = useMemo(
     () => couriers.filter((c) => c.isActive).map((c) => c.name),
@@ -33,15 +41,15 @@ export function CourierCombobox({
   };
 
   return (
-    <div className="form-group">
-      <label htmlFor={id}>{label}</label>
+    <div className={compact ? 'courier-combo-compact' : 'form-group'}>
+      {!compact && <label htmlFor={id}>{label}</label>}
       <input
         id={id}
         list={listId}
         className="form-control"
         value={input}
         onChange={(e) => handleInput(e.target.value)}
-        placeholder="Listeden seçin veya yazın..."
+        placeholder={placeholder}
         autoComplete="off"
       />
       <datalist id={listId}>
@@ -49,7 +57,9 @@ export function CourierCombobox({
           <option key={name} value={name} />
         ))}
       </datalist>
-      <span className="field-hint">Mevcut kurye seçilebilir veya yeni isim yazılabilir</span>
+      {!compact && (
+        <span className="field-hint">Mevcut kurye seçilebilir veya yeni isim yazılabilir</span>
+      )}
     </div>
   );
 }

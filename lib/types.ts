@@ -129,7 +129,7 @@ export function createDefaultTableEntry(businessId: string): TableEntry {
   };
 }
 
-export type MotorStatus = 'Aktif' | 'Bakımda' | 'Pasif';
+export type MotorStatus = 'Aktif' | 'Bakımda' | 'Pasif' | 'Kazalı';
 
 export type MotorServiceType =
   | 'Muayene'
@@ -206,7 +206,7 @@ export interface MotorAuditUser {
   email: string;
 }
 
-export const MOTOR_STATUS_OPTIONS: MotorStatus[] = ['Aktif', 'Bakımda', 'Pasif'];
+export const MOTOR_STATUS_OPTIONS: MotorStatus[] = ['Aktif', 'Bakımda', 'Pasif', 'Kazalı'];
 export const MOTOR_SERVICE_TYPES: MotorServiceType[] = [
   'Muayene',
   'Periyodik Bakım',

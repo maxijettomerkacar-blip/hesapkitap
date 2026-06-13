@@ -433,6 +433,54 @@ export async function assignCourierToMotor(
   return newAssignment;
 }
 
+export async function updateCourierName(
+  supabase: SupabaseClient,
+  courierId: string,
+  newName: string,
+): Promise<void> {
+  const couriers = await fetchCouriers(supabase);
+  const courier = couriers.find((c) => c.id === courierId);
+  if (!courier) throw new Error('Kurye bulunamadı');
+  await upsertCourier(supabase, { ...courier, name: newName.trim() });
+}
+
+/** Aktif atamayı kapat ve motoru boşa al */
+export async function unassignMotorFromCourier(
+  supabase: SupabaseClient,
+  motorId: string,
+  endDate: string,
+): Promise<void> {
+  const assignments = await fetchMotorAssignments(supabase);
+  for (const a of assignments.filter((x) => x.motorId === motorId && !x.endDate)) {
+    await updateMotorAssignment(supabase, { ...a, endDate });
+  }
+
+  const motors = await fetchMotors(supabase);
+  const motor = motors.find((m) => m.id === motorId);
+  if (motor) {
+    await upsertMotor(supabase, { ...motor, courierId: null });
+  }
+
+  await logMotorAudit(supabase, {
+    entityType: 'assignment',
+    entityId: motorId,
+    action: 'unassign',
+    summary: `Atama kaldırıldı (${endDate})`,
+    details: { motorId, endDate },
+  });
+}
+
+export async function updateMotorStatus(
+  supabase: SupabaseClient,
+  motorId: string,
+  status: Motor['status'],
+): Promise<void> {
+  const motors = await fetchMotors(supabase);
+  const motor = motors.find((m) => m.id === motorId);
+  if (!motor) throw new Error('Motor bulunamadı');
+  await upsertMotor(supabase, { ...motor, status });
+}
+
 export async function createMotorWithPlate(
   supabase: SupabaseClient,
   plate: string,

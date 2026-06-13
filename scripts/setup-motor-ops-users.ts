@@ -10,7 +10,11 @@ import { loadEnvLocal } from '../lib/load-env';
 
 loadEnvLocal();
 
-const DEFAULT_EMAILS = ['eren@maxicanakkale.com', 'mehmetcan@maxicanakkale.com'];
+const DEFAULT_EMAILS = [
+  'eren@maxicanakkale.com',
+  'mehmetcan@maxicanakkale.com',
+  'erenatici@maxicanakkale.com',
+];
 
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
