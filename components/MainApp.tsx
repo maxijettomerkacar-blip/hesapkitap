@@ -438,26 +438,33 @@ export function MainApp() {
             <thead>
               <tr>
                 {[
-                  ['S/N', 'Sıra Numarası'],
-                  ['İşletme', 'İşletmenin Adı'],
-                  ['0-5km', '0-5 km paket sayısı'],
-                  ['5+km', '5+ km paket sayısı'],
-                  ['Toplam', 'Toplam paket'],
-                  ['Hakediş', 'KDV hariç hakediş (₺)'],
-                  ['KDV', 'KDV tutarı (₺)'],
-                  ['KDV Dahil', 'KDV dahil toplam (₺)'],
-                  ['Banka Kom.', 'Banka komisyonu (₺)'],
-                  ['Pos Bakiye', 'POS bakiye (₺)'],
-                  ['Nakit', 'Nakit bakiye (₺)'],
-                  ['Net (₺)', 'Alacak / Verecek net tutar'],
-                  ['Ödeme', 'Ödeme durumu'],
-                  ['Kota', 'Kota durumu'],
-                  ['Not', 'Açıklama / notlar'],
-                  ['İşlemler', 'Düzenle / Sil'],
-                  ['Rapor', 'Kopyala / Kaydet'],
-                ].map(([label, title]) => (
-                  <th key={label} title={title}>
-                    <span>{label}</span>
+                  { lines: ['S/N'], title: 'Sıra Numarası' },
+                  { lines: ['İşletme'], title: 'İşletmenin Adı' },
+                  { lines: ['0-5km', 'P.'], title: '0-5 km paket sayısı' },
+                  { lines: ['5+km', 'P.'], title: '5+ km paket sayısı' },
+                  { lines: ['Toplam', 'P.'], title: 'Toplam paket' },
+                  { lines: ['Hakediş', '(₺)'], title: 'KDV hariç hakediş' },
+                  { lines: ['KDV', '(₺)'], title: 'KDV tutarı' },
+                  { lines: ['KDV', 'Dahil ₺'], title: 'KDV dahil toplam' },
+                  { lines: ['Banka', 'Kom. ₺'], title: 'Banka komisyonu' },
+                  { lines: ['Pos', 'Bakiye ₺'], title: 'POS bakiye' },
+                  { lines: ['Nakit', '(₺)'], title: 'Nakit bakiye' },
+                  { lines: ['Net', 'Alacak/Ver.'], title: 'Alacak / Verecek net tutar' },
+                  { lines: ['Ödeme', 'Dur.'], title: 'Ödeme durumu' },
+                  { lines: ['Kota?'], title: 'Kota durumu' },
+                  { lines: ['Açıklama'], title: 'Notlar' },
+                  { lines: ['İşlemler'], title: 'Düzenle / Sil' },
+                  { lines: ['Rapor', '/ Kayıt'], title: 'Kopyala / Kaydet' },
+                ].map(({ lines, title }) => (
+                  <th key={title} title={title}>
+                    <span className="th-label">
+                      {lines.map((line, i) => (
+                        <span key={i}>
+                          {i > 0 && <br />}
+                          {line}
+                        </span>
+                      ))}
+                    </span>
                   </th>
                 ))}
               </tr>
