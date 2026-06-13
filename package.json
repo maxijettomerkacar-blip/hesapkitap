@@ -9,6 +9,10 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "env:check": "tsx scripts/check-env.ts",
+    "deploy:check": "tsx scripts/health-check.ts",
+    "deploy:sync-vercel": "tsx scripts/sync-vercel-env.ts",
+    "deploy:all": "powershell -ExecutionPolicy Bypass -File scripts/deploy-all.ps1",
     "migrate:import": "tsx scripts/migrate-localstorage-json.ts"
   },
   "dependencies": {

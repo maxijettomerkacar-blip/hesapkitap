@@ -16,13 +16,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-if (-not $env:GITHUB_TOKEN) {
-    Write-Error "GITHUB_TOKEN ortam degiskeni tanimli degil. Ornek: `$env:GITHUB_TOKEN = 'ghp_...'"
-    exit 1
-}
-
 $repoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $repoRoot
+
+& "$repoRoot\scripts\load-env.ps1"
+
+if (-not $env:GITHUB_TOKEN) {
+    Write-Error "GITHUB_TOKEN .env.local icinde veya ortamda tanimli olmali"
+    exit 1
+}
 
 if (-not (Test-Path ".git")) {
     git init

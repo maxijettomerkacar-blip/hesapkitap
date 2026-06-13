@@ -1,0 +1,37 @@
+---
+description: Deploy akisi — degisiklik sonrasi git, vercel, supabase kontrol
+globs:
+  - "scripts/**"
+  - ".env.local.example"
+alwaysApply: false
+---
+
+# Deploy ve Ortam Kontrol Kurallari
+
+## Gizli bilgiler
+- Token/key sadece `.env.local` icinde (gitignore)
+- Repoya ASLA: VERCEL_TOKEN, GITHUB_TOKEN, SUPABASE_SERVICE_ROLE_KEY, anon key
+
+## Degisiklik sonrasi kontrol
+```powershell
+npm run deploy:check
+```
+
+## Tam deploy (test + build + push + vercel env + check)
+```powershell
+npm run deploy:all
+```
+
+## Ayri komutlar
+- `npm run env:check` — yerel env
+- `npm run deploy:sync-vercel` — Vercel env senkron
+- `.\scripts\github-push.ps1` — sadece GitHub (GITHUB_TOKEN gerekir)
+
+## Supabase Auth redirect (production)
+- `https://hesapkitap-git-main-omer-sqwqw-projects.vercel.app/auth/callback`
+- Supabase Dashboard → Authentication → URL Configuration
+
+## Vercel'de sadece su env'ler
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- NEXT_PUBLIC_APP_URL (opsiyonel)

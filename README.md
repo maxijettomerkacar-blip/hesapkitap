@@ -9,13 +9,17 @@ Profesyonel hakediş hesaplama uygulaması — Next.js + Supabase + Vercel.
    npm install
    ```
 
-2. `.env.local.example` dosyasını `.env.local` olarak kopyalayın ve Supabase bilgilerinizi girin.
+2. `.env.local.example` dosyasını `.env.local` olarak kopyalayın ve değerleri doldurun.
 
-3. Supabase SQL Editor'de `supabase/migrations/001_initial_schema.sql` dosyasını çalıştırın.
+3. **Detaylı kurulum:** [`SETUP_SUPABASE_VERCEL.md`](SETUP_SUPABASE_VERCEL.md)
 
-4. Supabase Dashboard → Authentication → Users üzerinden admin hesabı oluşturun.
+4. Ortam kontrolü: `npm run env:check`
 
-5. Geliştirme sunucusu:
+5. Supabase SQL Editor'de `supabase/migrations/001_initial_schema.sql` dosyasını çalıştırın.
+
+6. Supabase Dashboard → Authentication → Users üzerinden admin hesabı oluşturun.
+
+7. Geliştirme sunucusu:
    ```bash
    npm run dev
    ```
