@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaydedilmiş Hakediş Raporları</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="report-container">
+        <header class="report-header">
+            <h1>Kaydedilmiş Hakediş Raporları</h1>
+        </header>
+
+        <div class="filters-bar">
+            <div class="form-group">
+                <label for="filterBusinessName">İşletme Adı:</label>
+                <input type="text" id="filterBusinessName" class="form-control form-control-sm" placeholder="İşletme adına göre filtrele...">
+            </div>
+            <div class="form-group">
+                <label for="filterHesapTarihi">Hesap Tarihi:</label>
+                <input type="date" id="filterHesapTarihi" class="form-control form-control-sm">
+            </div>
+            <div class="form-group">
+                <label for="filterPaymentStatus">Ödeme Durumu:</label>
+                <select id="filterPaymentStatus" class="form-control form-control-sm">
+                    <option value="">Tümü</option>
+                    <option value="Odenmedi">Ödenmedi</option>
+                    <option value="Odendi">Ödendi</option>
+                    <option value="Kismi Odeme">Kısmi Ödeme</option>
+                </select>
+            </div>
+            <button id="clearFiltersBtn" class="btn btn-secondary btn-sm">Filtreleri Temizle</button>
+        </div>
+
+        <main class="content-area">
+            <div class="table-responsive">
+                <table id="savedReportsTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="savedAt">Kayıt Z.</th>
+                            <th class="sortable" data-sort="hesapTarihi">Hesap Tar.</th>
+                            <th class="sortable" data-sort="businessName">İşletme Adı</th>
+                            <th class="sortable" data-sort="totalPackages">Toplam P.</th>
+                            <th class="sortable" data-sort="totalWithVat">KDV Dahil (₺)</th>
+                            <th class="sortable" data-sort="netTotal">Alacak/Verecek (₺)</th>
+                            <th class="sortable" data-sort="paymentStatus">Ödeme Dur.</th>
+                            <th class="sortable" data-sort="hasQuota">Kota?</th>
+                            <th>Açıklama</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="savedReportsTableBody">
+                        <!-- Kaydedilmiş rapor satırları buraya eklenecek -->
+                    </tbody>
+                </table>
+                <div id="noReportsMessage" class="no-reports" style="display: none;">
+                    Kaydedilmiş rapor bulunmamaktadır.
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Rapor Detay Modalı -->
+    <div id="reportDetailModalOverlay" class="modal-overlay">
+        <div id="reportDetailModalContent" class="modal-content-wrapper" style="max-width: 700px;"> <!-- Modal biraz daha geniş olabilir -->
+            <div class="modal-header">
+                <h2 id="reportModalTitle">Rapor Detayları</h2>
+                <button class="modal-close-button" id="closeReportDetailModalBtn" aria-label="Kapat" title="Bu pencereyi kapat">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="reportDetailModalBody">
+                <!-- Detaylar buraya eklenecek -->
+            </div>
+            <div class="modal-footer">
+                <button id="cancelReportDetailModalBtn" class="btn btn-secondary">Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+---
+description: GitHub push — token asla repoya yazilmaz, GITHUB_TOKEN env kullan
+globs:
+  - "scripts/github-push.ps1"
+alwaysApply: false
+---
+
+# GitHub Deploy Kurallari
+
+## Repo
+- URL: https://github.com/maxijettomerkacar-blip/hesapkitap.git
+- Branch: `main`
+
+## Token guvenligi (ZORUNLU)
+- Personal Access Token **asla** kod, commit, `.env`, rule veya script icine yazilmaz
+- Sadece ortam degiskeni: `$env:GITHUB_TOKEN`
+- Token chat veya logda paylasildiysa GitHub'da hemen revoke edilip yenisi uretilir
+
+## Push
+```powershell
+cd c:\Users\kacar\OneDrive\Desktop\HesaplamaProg2026
+$env:GITHUB_TOKEN = "ghp_..."   # sadece terminal oturumunda
+.\scripts\github-push.ps1
+```
+
+## Push oncesi kontrol
+- `.env.local` git'e eklenmemeli (`.gitignore` icinde)
+- `npm run build` ve `npm test` gecmeli
+
+## Vercel (push sonrasi)
+- Vercel'de repo import
+- Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Supabase Auth redirect: `https://<domain>/auth/callback`

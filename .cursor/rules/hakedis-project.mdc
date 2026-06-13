@@ -1,0 +1,36 @@
+---
+description: MaxiHesaplama hakediş hesaplama projesi — formül dokunulmazlığı ve mimari kurallar
+globs:
+  - "**/*.{ts,tsx,js,jsx,sql,md}"
+alwaysApply: true
+---
+
+# MaxiHesaplama Proje Kuralları
+
+## Hesaplama (DEĞİŞTİRİLEMEZ)
+
+Finansal formüller `rules/core_calculations.md` ile birebir uyumlu olmalıdır:
+
+- Hakediş = (NP × NF) + (DP × DF)
+- KDV = Hakediş × (KDV_R / 100)
+- KDV Dahil = Hakediş + KDV
+- Net = KDV Dahil + BK - POS - NAKIT
+
+**Tüm hesaplamalar yalnızca `lib/calculations.ts` içinde yapılır.** UI, rapor ve kayıt kodları formül kopyalamaz; `calculateRow()` çağırır.
+
+## Yasaklar
+
+- `rules/core_calculations.md` formüllerini değiştirmek
+- UI bileşenlerinde inline hesaplama
+- Enum değerlerini değiştirmek: `Odenmedi`/`Odendi`/`Kismi Odeme`, `Yok`/`Var`
+
+## Mimari
+
+- Next.js App Router + TypeScript + Supabase
+- Supabase CRUD: `lib/supabase/queries.ts`
+- Rapor metni: `lib/report-text.ts` (tek kaynak)
+- Boş sayısal girdi → 0; para gösterimi → toFixed(2)
+
+## Referans
+
+Detaylı kurallar: `rules/PROJECT_RULES.md`
