@@ -263,12 +263,12 @@ body {
 
 input[type="number"].form-control { text-align: center; }
 
-/* --- Tablo Stilleri (Compact & Rotated Headers) --- */
+/* --- Tablo Stilleri --- */
 .table-responsive {
     overflow-x: auto; 
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    margin-top: 5rem; /* Döndürülmüş başlıklar için üst boşluk */
+    margin-top: 1rem;
     box-shadow: var(--shadow-sm);
 }
 
@@ -283,8 +283,8 @@ input[type="number"].form-control { text-align: center; }
 .data-table th, 
 .data-table td {
     border-bottom: 1px solid var(--border-color);
-    padding: 0.4rem 0.3rem; /* Compact padding */
-    text-align: center; /* Tüm içerikleri ortala */
+    padding: 0.4rem 0.3rem;
+    text-align: center;
     vertical-align: middle;
 }
 
@@ -298,76 +298,84 @@ input[type="number"].form-control { text-align: center; }
     position: sticky;
     top: 0;
     z-index: 10;
-    height: 140px; /* Döndürülmüş başlıklar için yeterli yükseklik artırıldı */
     white-space: nowrap;
-    vertical-align: bottom;
-    padding: 0;
+    vertical-align: middle;
+    padding: 0.5rem 0.35rem;
     overflow: visible;
 }
 
-/* Başlık Döndürme CSS Mantığı - Geliştirilmiş */
-.data-table th span {
-    display: inline-block;
-    transform: rotate(-45deg);
-    transform-origin: left bottom;
-    width: 30px;
-    margin-left: 1.25rem;
-    position: relative;
-    bottom: 5px;
-    left: 0;
-    white-space: nowrap;
-    line-height: 1;
+/* Ana hesaplama tablosu — okunaklı yatay başlıklar */
+#calculationTable.data-table th {
+    height: auto;
+    min-height: 2.75rem;
+    white-space: normal;
+    line-height: 1.25;
+    font-size: 0.6875rem;
+    hyphens: auto;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+#calculationTable.data-table th span {
+    display: block;
+    transform: none;
+    width: auto;
+    margin: 0;
+    position: static;
+    white-space: normal;
+    line-height: 1.25;
+    word-break: break-word;
 }
 
 
-/* Sütun genişlikleri - Compact */
-.data-table th:nth-child(1), .data-table td:nth-child(1) { width: 3rem; min-width: 3rem; text-align: center; color: var(--text-muted); } /* S/N */
-.data-table th:nth-child(2), .data-table td:nth-child(2) { 
-    min-width: 130px; 
-    max-width: 130px; 
-    font-weight: 600; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-} /* İŞLETME */
+/* Sütun genişlikleri - hesaplama tablosu */
+#calculationTable.data-table th:nth-child(1), #calculationTable.data-table td:nth-child(1) { width: 3rem; min-width: 3rem; text-align: center; color: var(--text-muted); }
+#calculationTable.data-table th:nth-child(2), #calculationTable.data-table td:nth-child(2) {
+    min-width: 130px;
+    max-width: 130px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 /* Paket Sayıları Sütunları */
-.data-table th:nth-child(3), .data-table td:nth-child(3),
-.data-table th:nth-child(4), .data-table td:nth-child(4),
-.data-table th:nth-child(5), .data-table td:nth-child(5) { min-width: 45px; text-align: center; }
+#calculationTable.data-table th:nth-child(3), #calculationTable.data-table td:nth-child(3),
+#calculationTable.data-table th:nth-child(4), #calculationTable.data-table td:nth-child(4),
+#calculationTable.data-table th:nth-child(5), #calculationTable.data-table td:nth-child(5) { min-width: 52px; text-align: center; }
 
 /* Parasal Veri Giriş ve Hesaplama Sütunları */
-.data-table th:nth-child(6), .data-table td:nth-child(6), 
-.data-table th:nth-child(7), .data-table td:nth-child(7), 
-.data-table th:nth-child(8), .data-table td:nth-child(8), 
-.data-table th:nth-child(9), .data-table td:nth-child(9), 
-.data-table th:nth-child(10),.data-table td:nth-child(10),
-.data-table th:nth-child(11),.data-table td:nth-child(11) { min-width: 70px; }
+#calculationTable.data-table th:nth-child(6), #calculationTable.data-table td:nth-child(6),
+#calculationTable.data-table th:nth-child(7), #calculationTable.data-table td:nth-child(7),
+#calculationTable.data-table th:nth-child(8), #calculationTable.data-table td:nth-child(8),
+#calculationTable.data-table th:nth-child(9), #calculationTable.data-table td:nth-child(9),
+#calculationTable.data-table th:nth-child(10), #calculationTable.data-table td:nth-child(10),
+#calculationTable.data-table th:nth-child(11), #calculationTable.data-table td:nth-child(11) { min-width: 72px; }
 
 /* Alacak/Verecek Sütunu Vurgusu */
-.data-table th:nth-child(12), 
-.data-table td:nth-child(12) {
+#calculationTable.data-table th:nth-child(12),
+#calculationTable.data-table td:nth-child(12) {
     background-color: rgba(67, 97, 238, 0.05);
     color: var(--primary);
     font-weight: 700;
     border-left: 1px solid rgba(67, 97, 238, 0.1);
     border-right: 1px solid rgba(67, 97, 238, 0.1);
-    min-width: 80px;
+    min-width: 88px;
 }
 
 /* Durum, Kota ve Açıklama */
-.data-table th:nth-child(13), .data-table td:nth-child(13) { min-width: 80px; } /* Ödeme Dur. */
-.data-table th:nth-child(14), .data-table td:nth-child(14) { min-width: 45px; text-align: center; } /* Kota? */
-.data-table th:nth-child(15), .data-table td:nth-child(15) { min-width: 100px; } /* Açıklama */
+#calculationTable.data-table th:nth-child(13), #calculationTable.data-table td:nth-child(13) { min-width: 88px; }
+#calculationTable.data-table th:nth-child(14), #calculationTable.data-table td:nth-child(14) { min-width: 52px; text-align: center; }
+#calculationTable.data-table th:nth-child(15), #calculationTable.data-table td:nth-child(15) { min-width: 100px; }
 
 /* İşlemler ve Rapor/Kayıt Sütun Genişlikleri */
-.data-table th:nth-child(16), 
-.data-table td:nth-child(16) { 
+#calculationTable.data-table th:nth-child(16),
+#calculationTable.data-table td:nth-child(16) {
     min-width: 90px;
 }
 
-.data-table th:nth-child(17), 
-.data-table td:nth-child(17) { 
+#calculationTable.data-table th:nth-child(17),
+#calculationTable.data-table td:nth-child(17) {
     min-width: 100px;
 }
 

@@ -47,6 +47,21 @@ if (optional) {
   console.log('BILGI: SUPABASE_SERVICE_ROLE_KEY yok — import script calismaz, uygulama calisir');
 }
 
+const optionalRelease = [
+  ['GITHUB_TOKEN', 'GitHub push (release)'],
+  ['VERCEL_TOKEN', 'Vercel deploy (release)'],
+  ['SUPABASE_ACCESS_TOKEN', 'Otomatik SQL migration (opsiyonel)'],
+] as const;
+
+for (const [key, hint] of optionalRelease) {
+  const val = vars[key];
+  if (val && !val.includes('your-')) {
+    console.log(`OK: ${key} (${hint})`);
+  } else {
+    console.log(`BILGI: ${key} yok — ${hint} release sirasinda atlanabilir`);
+  }
+}
+
 if (!ok) {
   console.error('\nSETUP_SUPABASE_VERCEL.md dosyasina bakin.');
   process.exit(1);

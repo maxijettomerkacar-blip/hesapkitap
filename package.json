@@ -11,8 +11,14 @@
     "test:watch": "vitest",
     "env:check": "tsx scripts/check-env.ts",
     "deploy:check": "tsx scripts/health-check.ts",
+    "deploy:verify": "tsx scripts/deploy-verify.ts",
     "deploy:sync-vercel": "tsx scripts/sync-vercel-env.ts",
-    "deploy:all": "powershell -ExecutionPolicy Bypass -File scripts/deploy-all.ps1",
+    "deploy:fix-vercel": "tsx scripts/fix-vercel-project.ts",
+    "deploy:all": "tsx scripts/deploy-release.ts",
+    "release": "tsx scripts/deploy-release.ts",
+    "deploy": "tsx scripts/deploy-release.ts",
+    "infra:check": "tsx scripts/check-supabase.ts",
+    "supabase:migrate": "tsx scripts/apply-supabase-migrations.ts",
     "migrate:import": "tsx scripts/migrate-localstorage-json.ts"
   },
   "dependencies": {

@@ -31,6 +31,14 @@ Finansal formüller `rules/core_calculations.md` ile birebir uyumlu olmalıdır:
 - Rapor metni: `lib/report-text.ts` (tek kaynak)
 - Boş sayısal girdi → 0; para gösterimi → toFixed(2)
 
+## Otomatik release (ZORUNLU)
+
+Kod degisikligi sonrasi agent calistirir:
+```powershell
+npm run release
+```
+GitHub push + Supabase kontrol/migration + Vercel deploy. Detay: `.cursor/rules/deploy-workflow.mdc`
+
 ## Referans
 
 Detaylı kurallar: `rules/PROJECT_RULES.md`

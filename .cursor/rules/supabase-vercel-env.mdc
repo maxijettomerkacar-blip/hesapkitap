@@ -1,0 +1,31 @@
+---
+description: Supabase ve Vercel ortam degiskenleri — token/secret repoya yazilmaz
+globs:
+  - ".env*"
+  - "SETUP_SUPABASE_VERCEL.md"
+alwaysApply: false
+---
+
+# Supabase + Vercel Ortam Kurallari
+
+## Zorunlu env (local + Vercel)
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+## Asla Vercel'e veya repoya konmaz
+- `SUPABASE_SERVICE_ROLE_KEY` (sadece yerel import)
+- `GITHUB_TOKEN`, `VERCEL_TOKEN`
+- Database password
+
+## Dosyalar
+- Sablon: `.env.local.example`
+- Doldurulacak: `.env.local` (gitignore)
+- Rehber: `SETUP_SUPABASE_VERCEL.md`
+- Kontrol: `npm run env:check`
+
+## Supabase Auth redirect
+- Local: `http://localhost:3000/auth/callback`
+- Production: `https://<vercel-domain>/auth/callback`
+
+## SQL migration
+- `supabase/migrations/001_initial_schema.sql` Supabase SQL Editor'de bir kez calistirilir

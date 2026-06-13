@@ -38,14 +38,13 @@ npm run migrate:import -- path/to/maxi_yedek.json
 
 `SUPABASE_SERVICE_ROLE_KEY` ortam değişkeni gerekir.
 
-## Vercel Deploy
+## Deploy ve otomatik release
 
-1. Repo'yu GitHub'a push edin.
-2. Vercel'de projeyi import edin.
-3. Environment variables ekleyin:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Supabase Auth redirect URL: `https://<domain>/auth/callback`
+Her kod degisikliginden sonra:
+```powershell
+npm run release
+```
+GitHub + Supabase + Vercel otomatik. Sadece kontrol: `npm run deploy:verify`
 
 ## Kurallar
 

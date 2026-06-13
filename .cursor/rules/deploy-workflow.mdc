@@ -1,37 +1,54 @@
 ---
-description: Deploy akisi — degisiklik sonrasi git, vercel, supabase kontrol
+description: ZORUNLU otomatik release — her kod degisikliginden sonra GitHub + Vercel + Supabase
 globs:
-  - "scripts/**"
-  - ".env.local.example"
-alwaysApply: false
+  - "**/*.{ts,tsx,js,jsx,css,sql,json,md}"
+alwaysApply: true
 ---
 
-# Deploy ve Ortam Kontrol Kurallari
+# Otomatik Release Kurali (ZORUNLU)
 
-## Gizli bilgiler
-- Token/key sadece `.env.local` icinde (gitignore)
-- Repoya ASLA: VERCEL_TOKEN, GITHUB_TOKEN, SUPABASE_SERVICE_ROLE_KEY, anon key
+## Agent davranisi
 
-## Degisiklik sonrasi kontrol
+Kullaniciya kod/UI/infra degisikligi teslim etmeden **once** su komutu calistir:
+
 ```powershell
-npm run deploy:check
+npm run release
 ```
 
-## Tam deploy (test + build + push + vercel env + check)
-```powershell
-npm run deploy:all
-```
+Bu komut sirasiyla:
+1. `npm test` + `npm run build`
+2. **GitHub** — commit + push (`GITHUB_TOKEN` .env.local'da)
+3. **Supabase** — migration gerekirse uygula + tablo kontrolu
+4. **Vercel** — env sync + framework fix + production redeploy
+5. **Verify** — `deploy:verify` (fix-vercel + health check)
 
-## Ayri komutlar
-- `npm run env:check` — yerel env
-- `npm run deploy:sync-vercel` — Vercel env senkron
-- `.\scripts\github-push.ps1` — sadece GitHub (GITHUB_TOKEN gerekir)
+Sadece soru/inceleme (kod degismeden) ise release calistirma; sadece `npm run deploy:verify` yeterli.
+
+## Gerekli .env.local degiskenleri
+
+| Degisken | Platform |
+|----------|----------|
+| `GITHUB_TOKEN` | GitHub push |
+| `VERCEL_TOKEN` | Vercel deploy |
+| `VERCEL_PROJECT_ID` | Vercel API |
+| `VERCEL_ORG_ID` | Vercel team |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Migration hash kaydi |
+| `SUPABASE_ACCESS_TOKEN` | Opsiyonel — otomatik SQL migration |
+| `DATABASE_URL` | Opsiyonel — alternatif SQL migration |
+
+**Repoya ASLA yazma:** token, key, sifre.
+
+## Komut ozeti
+
+| Komut | Ne zaman |
+|-------|----------|
+| `npm run release` | Kod degisikligi sonrasi (ana komut) |
+| `npm run deploy:verify` | Sadece kontrol, push yok |
+| `npm run deploy:check` | Hizli saglik kontrolu |
 
 ## Supabase Auth redirect (production)
-- `https://hesapkitap-git-main-omer-sqwqw-projects.vercel.app/auth/callback`
-- Supabase Dashboard → Authentication → URL Configuration
 
-## Vercel'de sadece su env'ler
-- NEXT_PUBLIC_SUPABASE_URL
-- NEXT_PUBLIC_SUPABASE_ANON_KEY
-- NEXT_PUBLIC_APP_URL (opsiyonel)
+- `https://hesapkitap-git-main-omer-sqwqw-projects.vercel.app/auth/callback`
+- `http://localhost:3000/auth/callback`
