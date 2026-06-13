@@ -31,7 +31,7 @@ function run(label: string, cmd: string, optional = false) {
 }
 
 function gitPush() {
-  const token = process.env.GITHUB_TOKEN;
+  const token = (process.env.GITHUB_TOKEN || '').replace(/^=+/, '').trim();
   const remote = 'https://github.com/maxijettomerkacar-blip/hesapkitap.git';
   const branch = 'main';
 
