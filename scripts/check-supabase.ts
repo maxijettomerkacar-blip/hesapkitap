@@ -36,7 +36,13 @@ const headers = {
 };
 
 const requiredTables = ['businesses', 'table_entries', 'saved_reports', 'regions', 'app_settings'];
-const optionalTables = ['couriers', 'motors', 'motor_maintenance'];
+const optionalTables = [
+  'couriers',
+  'motors',
+  'motor_maintenance',
+  'motor_assignments',
+  'motor_audit_log',
+];
 
 async function checkTable(name: string): Promise<boolean> {
   const res = await fetch(`${url}/rest/v1/${name}?select=*&limit=1`, { headers });

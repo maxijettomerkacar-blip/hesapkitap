@@ -12,6 +12,7 @@ import {
   insertMotorMaintenance,
   upsertMotor,
 } from '@/lib/supabase/queries-motor';
+import { uploadMaintenanceReceipt } from '@/lib/supabase/motor-storage';
 import type { Courier, Motor, MotorMaintenance, MotorServiceType } from '@/lib/types';
 import { MOTOR_SERVICE_TYPES, MOTOR_STATUS_OPTIONS } from '@/lib/types';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -59,6 +60,8 @@ export function MotorDetailDrawer({
   const [svcKm, setSvcKm] = useState('');
   const [svcDesc, setSvcDesc] = useState('');
   const [svcNextDue, setSvcNextDue] = useState('');
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!motor || !open) return;
@@ -132,9 +135,18 @@ export function MotorDetailDrawer({
   };
 
   const handleAddMaintenance = async () => {
+    setUploading(true);
+    const recordId = generateId();
     try {
+      let receiptUrl = '';
+      let receiptPath = '';
+      if (receiptFile) {
+        const uploaded = await uploadMaintenanceReceipt(getSupabase(), motor.id, recordId, receiptFile);
+        receiptUrl = uploaded.url;
+        receiptPath = uploaded.path;
+      }
       await insertMotorMaintenance(getSupabase(), {
-        id: generateId(),
+        id: recordId,
         motorId: motor.id,
         serviceDate: svcDate,
         serviceType: svcType,
@@ -142,6 +154,8 @@ export function MotorDetailDrawer({
         odometerKm: parseFloat(svcKm) || 0,
         description: svcDesc,
         nextDueDate: svcNextDue || null,
+        receiptUrl,
+        receiptPath,
       });
       const [records, total] = await Promise.all([
         fetchMotorMaintenance(getSupabase(), motor.id),
@@ -152,10 +166,14 @@ export function MotorDetailDrawer({
       setMaintFormOpen(false);
       setSvcCost('');
       setSvcDesc('');
+      setReceiptFile(null);
       showToast('Bakım kaydı eklendi.', 'success');
+      onSaved();
     } catch (e) {
       console.error(e);
       showToast('Bakım kaydı eklenemedi.', 'error');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -300,6 +318,16 @@ export function MotorDetailDrawer({
                       {m.nextDueDate && (
                         <div style={{ fontSize: '0.75rem' }}>Sonraki: {new Date(m.nextDueDate).toLocaleDateString('tr-TR')}</div>
                       )}
+                      {m.receiptUrl && (
+                        <div className="receipt-preview">
+                          <a href={m.receiptUrl} target="_blank" rel="noopener noreferrer" className="btn btn-info btn-sm">
+                            Fiş Görüntüle
+                          </a>
+                          {m.receiptUrl.match(/\.(jpg|jpeg|png|webp|gif)/i) && (
+                            <img src={m.receiptUrl} alt="Bakım fişi" className="receipt-thumb" />
+                          )}
+                        </div>
+                      )}
                       <button type="button" className="btn btn-danger btn-sm" style={{ marginTop: '0.35rem' }} onClick={() => handleDeleteMaint(m.id)}>
                         Sil
                       </button>
@@ -361,13 +389,25 @@ export function MotorDetailDrawer({
                 <label>Açıklama</label>
                 <textarea className="form-control" rows={2} value={svcDesc} onChange={(e) => setSvcDesc(e.target.value)} />
               </div>
+              <div className="form-group">
+                <label>Bakım Fişi (foto / PDF)</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                  onChange={(e) => setReceiptFile(e.target.files?.[0] ?? null)}
+                />
+                {receiptFile && (
+                  <span className="field-hint">{receiptFile.name} seçildi</span>
+                )}
+              </div>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setMaintFormOpen(false)}>
                 İptal
               </button>
-              <button type="button" className="btn btn-primary" onClick={handleAddMaintenance}>
-                Ekle
+              <button type="button" className="btn btn-primary" onClick={handleAddMaintenance} disabled={uploading}>
+                {uploading ? 'Yükleniyor...' : 'Ekle'}
               </button>
             </div>
           </div>

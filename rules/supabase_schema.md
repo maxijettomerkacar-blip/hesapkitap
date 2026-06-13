@@ -139,6 +139,31 @@ Anonim (`anon`) rolüne hiçbir tabloda erişim verilmez.
 | service_type | text | Muayene, Periyodik Bakım, vb. |
 | cost | numeric | |
 | next_due_date | date | Hatırlatma |
+| receipt_url | text | Bakım fişi public URL |
+| receipt_path | text | Storage path |
+
+### `motor_assignments`
+
+| Kolon | Tip | Not |
+|-------|-----|-----|
+| id | text PK | |
+| motor_id | text FK → motors | |
+| courier_id | text FK → couriers | |
+| start_date | date | Atama başlangıcı |
+| end_date | date | null = devam ediyor |
+| created_by / updated_by | text | Kullanıcı e-postası |
+
+### `motor_audit_log`
+
+| Kolon | Tip | Not |
+|-------|-----|-----|
+| id | text PK | |
+| entity_type | text | motor, courier, assignment, maintenance |
+| action | text | create, update, delete, upsert |
+| user_email | text | Kim yaptı |
+| details | jsonb | Değişiklik detayı |
+
+Storage bucket: `maintenance-receipts` (003_motor_ops.sql)
 
 ---
 

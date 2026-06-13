@@ -171,6 +171,39 @@ export interface MotorMaintenance {
   odometerKm: number;
   description: string;
   nextDueDate: string | null;
+  receiptUrl?: string;
+  receiptPath?: string;
+}
+
+export interface MotorAssignment {
+  id: string;
+  motorId: string;
+  courierId: string;
+  motorPlate?: string;
+  courierName?: string;
+  startDate: string;
+  endDate: string | null;
+  notes: string;
+  createdBy: string;
+  updatedBy: string;
+  createdAt?: string;
+}
+
+export interface MotorAuditLog {
+  id: string;
+  entityType: string;
+  entityId: string;
+  action: string;
+  summary: string;
+  details: Record<string, unknown>;
+  userEmail: string;
+  userId: string;
+  createdAt: string;
+}
+
+export interface MotorAuditUser {
+  id: string;
+  email: string;
 }
 
 export const MOTOR_STATUS_OPTIONS: MotorStatus[] = ['Aktif', 'Bakımda', 'Pasif'];

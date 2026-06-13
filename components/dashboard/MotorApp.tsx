@@ -1,20 +1,22 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { downloadCsv, exportMotorsCsv } from '@/lib/export-csv';
-import { formatCurrency, generateId } from '@/lib/formatters';
+import { generateId } from '@/lib/formatters';
 import { getMotorAlert } from '@/lib/motor-alerts';
 import { createClient } from '@/lib/supabase/client';
 import {
+  fetchAllMaintenance,
   fetchCouriers,
-  fetchMaintenanceCostTotal,
   fetchMotors,
   upsertMotor,
 } from '@/lib/supabase/queries-motor';
 import { fetchRegions } from '@/lib/supabase/queries';
-import type { Courier, Motor } from '@/lib/types';
+import type { Courier, Motor, MotorMaintenance } from '@/lib/types';
 import { DashboardShell } from '@/components/dashboard/DashboardShell';
 import { CourierPanel } from '@/components/dashboard/CourierPanel';
+import { MotorCostSummary } from '@/components/dashboard/MotorCostSummary';
 import { MotorDetailDrawer } from '@/components/dashboard/MotorDetailDrawer';
 import { useToast } from '@/components/ui/Toast';
 
@@ -27,28 +29,28 @@ export function MotorApp() {
   const [loading, setLoading] = useState(true);
   const [motors, setMotors] = useState<Motor[]>([]);
   const [couriers, setCouriers] = useState<Courier[]>([]);
+  const [maintenanceRecords, setMaintenanceRecords] = useState<MotorMaintenance[]>([]);
   const [regions, setRegions] = useState<string[]>(['İskele', 'Barbaros']);
   const [tab, setTab] = useState<Tab>('motors');
   const [search, setSearch] = useState('');
   const [filterUnassigned, setFilterUnassigned] = useState(false);
   const [selectedMotor, setSelectedMotor] = useState<Motor | null>(null);
   const [addOpen, setAddOpen] = useState(false);
-  const [fleetMaintTotal, setFleetMaintTotal] = useState(0);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
       const supabase = getSupabase();
-      const [m, c, r, maintTotal] = await Promise.all([
+      const [m, c, r, maint] = await Promise.all([
         fetchMotors(supabase).catch(() => [] as Motor[]),
         fetchCouriers(supabase).catch(() => [] as Courier[]),
         fetchRegions(supabase),
-        fetchMaintenanceCostTotal(supabase).catch(() => 0),
+        fetchAllMaintenance(supabase).catch(() => [] as MotorMaintenance[]),
       ]);
       setMotors(m);
       setCouriers(c);
       setRegions(r.length ? r : ['İskele', 'Barbaros']);
-      setFleetMaintTotal(maintTotal);
+      setMaintenanceRecords(maint);
     } catch (e) {
       console.error(e);
       showToast('Veriler yüklenemedi.', 'error');
@@ -77,6 +79,11 @@ export function MotorApp() {
     }
     return list;
   }, [motors, search, filterUnassigned]);
+
+  const alertCount = useMemo(
+    () => motors.filter((m) => getMotorAlert(m).level !== 'none').length,
+    [motors],
+  );
 
   const handleAddMotor = async () => {
     const motor: Motor = {
@@ -126,22 +133,32 @@ export function MotorApp() {
 
   return (
     <DashboardShell>
-      <div className="kpi-context" style={{ marginBottom: '1rem' }}>
-        <span>
-          <strong>Filo:</strong> {motors.length} motor · {couriers.filter((c) => c.isActive).length} aktif kurye
-        </span>
-        <span>
-          <strong>Toplam bakım maliyeti:</strong> {formatCurrency(fleetMaintTotal)} ₺
-        </span>
-      </div>
+      <MotorCostSummary
+        records={maintenanceRecords}
+        motorCount={motors.length}
+        courierCount={couriers.filter((c) => c.isActive).length}
+      />
 
-      <div className="motor-tabs">
-        <button type="button" className={`motor-tab ${tab === 'motors' ? 'active' : ''}`} onClick={() => setTab('motors')}>
-          Motorlar
-        </button>
-        <button type="button" className={`motor-tab ${tab === 'couriers' ? 'active' : ''}`} onClick={() => setTab('couriers')}>
-          Kuryeler
-        </button>
+      {alertCount > 0 && (
+        <div className="motor-alert-widget motor-alert-widget--danger" style={{ marginBottom: '1rem' }}>
+          <span>
+            <strong>{alertCount}</strong> motor için muayene/sigorta uyarısı var.
+          </span>
+        </div>
+      )}
+
+      <div className="motor-page-toolbar">
+        <div className="motor-tabs">
+          <button type="button" className={`motor-tab ${tab === 'motors' ? 'active' : ''}`} onClick={() => setTab('motors')}>
+            Motorlar
+          </button>
+          <button type="button" className={`motor-tab ${tab === 'couriers' ? 'active' : ''}`} onClick={() => setTab('couriers')}>
+            Kuryeler (Şoför)
+          </button>
+        </div>
+        <Link href="/motor-yonetim" className="btn btn-outline-primary btn-sm">
+          Motor Yönetim →
+        </Link>
       </div>
 
       {tab === 'couriers' ? (
@@ -157,7 +174,7 @@ export function MotorApp() {
               onChange={(e) => setSearch(e.target.value)}
               style={{ maxWidth: 220 }}
             />
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.8125rem' }}>
+            <label className="motor-filter-check">
               <input type="checkbox" checked={filterUnassigned} onChange={(e) => setFilterUnassigned(e.target.checked)} />
               Atanmamış
             </label>
@@ -196,9 +213,7 @@ export function MotorApp() {
                       <tr key={m.id}>
                         <td>
                           <strong>{m.plate}</strong>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                            {m.brand} {m.model}
-                          </div>
+                          <div className="cell-sub">{m.brand} {m.model}</div>
                         </td>
                         <td>{m.courierName ?? '—'}</td>
                         <td>{m.region || '—'}</td>
@@ -223,14 +238,14 @@ export function MotorApp() {
                     <div className="motor-card-header">
                       <div>
                         <div className="motor-card-plate">{m.plate}</div>
-                        <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
+                        <div className="cell-sub">
                           {m.courierName ?? 'Kurye yok'} · {m.region}
                         </div>
                       </div>
                       {alertBadge(m)}
                     </div>
                     <button type="button" className="btn btn-primary btn-sm" onClick={() => setSelectedMotor(m)}>
-                      Detay
+                      Detay &amp; Bakım
                     </button>
                   </div>
                 ))}
