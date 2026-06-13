@@ -20,6 +20,7 @@
     "deploy": "tsx scripts/deploy-release.ts",
     "infra:check": "tsx scripts/check-supabase.ts",
     "supabase:migrate": "tsx scripts/apply-supabase-migrations.ts",
+    "motor-ops:setup-users": "tsx scripts/setup-motor-ops-users.ts",
     "migrate:import": "tsx scripts/migrate-localstorage-json.ts"
   },
   "dependencies": {

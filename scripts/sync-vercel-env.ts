@@ -20,6 +20,7 @@ const varsToSync = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'NEXT_PUBLIC_APP_URL',
+  'MOTOR_OPS_EMAILS',
 ];
 
 const targets = ['production', 'preview', 'development'] as const;
