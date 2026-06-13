@@ -102,6 +102,46 @@ Anonim (`anon`) rolüne hiçbir tabloda erişim verilmez.
 
 ---
 
+## Motor Takip (`002_motor_tracking.sql`)
+
+### `couriers`
+
+| Kolon | Tip | Not |
+|-------|-----|-----|
+| id | text PK | |
+| name | text NOT NULL | Kurye adı |
+| phone | text | |
+| region | text | |
+| is_active | boolean DEFAULT true | |
+| notes | text | |
+
+### `motors`
+
+| Kolon | Tip | Not |
+|-------|-----|-----|
+| id | text PK | |
+| plate | text UNIQUE NOT NULL | Plaka |
+| brand, model | text | |
+| courier_id | text FK → couriers | |
+| region | text | |
+| inspection_date | date | Muayene |
+| insurance_expiry | date | Sigorta |
+| status | text | Aktif / Bakımda / Pasif |
+| odometer_km | numeric | |
+
+### `motor_maintenance`
+
+| Kolon | Tip | Not |
+|-------|-----|-----|
+| id | text PK | |
+| motor_id | text FK → motors CASCADE | |
+| service_date | date NOT NULL | |
+| service_type | text | Muayene, Periyodik Bakım, vb. |
+| cost | numeric | |
+| next_due_date | date | Hatırlatma |
+
+---
+
 ## Ortam Değişkenleri
 
 | Değişken | Kullanım |

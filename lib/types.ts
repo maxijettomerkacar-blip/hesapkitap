@@ -128,3 +128,56 @@ export function createDefaultTableEntry(businessId: string): TableEntry {
     notes: '',
   };
 }
+
+export type MotorStatus = 'Aktif' | 'Bakımda' | 'Pasif';
+
+export type MotorServiceType =
+  | 'Muayene'
+  | 'Periyodik Bakım'
+  | 'Arıza'
+  | 'Lastik'
+  | 'Diğer';
+
+export interface Courier {
+  id: string;
+  name: string;
+  phone: string;
+  region: string;
+  isActive: boolean;
+  notes: string;
+}
+
+export interface Motor {
+  id: string;
+  plate: string;
+  brand: string;
+  model: string;
+  courierId: string | null;
+  courierName?: string | null;
+  region: string;
+  inspectionDate: string | null;
+  insuranceExpiry: string | null;
+  status: MotorStatus;
+  odometerKm: number;
+  notes: string;
+}
+
+export interface MotorMaintenance {
+  id: string;
+  motorId: string;
+  serviceDate: string;
+  serviceType: MotorServiceType | string;
+  cost: number;
+  odometerKm: number;
+  description: string;
+  nextDueDate: string | null;
+}
+
+export const MOTOR_STATUS_OPTIONS: MotorStatus[] = ['Aktif', 'Bakımda', 'Pasif'];
+export const MOTOR_SERVICE_TYPES: MotorServiceType[] = [
+  'Muayene',
+  'Periyodik Bakım',
+  'Arıza',
+  'Lastik',
+  'Diğer',
+];

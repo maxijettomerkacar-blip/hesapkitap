@@ -367,6 +367,9 @@ export function MainApp() {
             />
           </div>
           <div className="main-actions">
+            <Link href="/dashboard" className="btn btn-outline-primary">
+              Yeni Sisteme Giriş
+            </Link>
             <div className="dropdown">
               <button
                 type="button"

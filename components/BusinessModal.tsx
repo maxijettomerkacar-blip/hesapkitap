@@ -10,9 +10,17 @@ interface BusinessModalProps {
   regions: string[];
   onClose: () => void;
   onSave: (business: Business) => void;
+  overlayClassName?: string;
 }
 
-export function BusinessModal({ open, business, regions, onClose, onSave }: BusinessModalProps) {
+export function BusinessModal({
+  open,
+  business,
+  regions,
+  onClose,
+  onSave,
+  overlayClassName = '',
+}: BusinessModalProps) {
   const [name, setName] = useState('');
   const [normalFee, setNormalFee] = useState('');
   const [distantFee, setDistantFee] = useState('');
@@ -52,7 +60,7 @@ export function BusinessModal({ open, business, regions, onClose, onSave }: Busi
 
   return (
     <div
-      className="modal-overlay active"
+      className={`modal-overlay active ${overlayClassName}`.trim()}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       role="dialog"
       aria-modal="true"

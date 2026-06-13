@@ -35,7 +35,16 @@ const headers = {
   Authorization: `Bearer ${anonKey}`,
 };
 
-const tables = ['businesses', 'table_entries', 'saved_reports', 'regions', 'app_settings'];
+const tables = [
+  'businesses',
+  'table_entries',
+  'saved_reports',
+  'regions',
+  'app_settings',
+  'couriers',
+  'motors',
+  'motor_maintenance',
+];
 
 async function checkTable(name: string): Promise<boolean> {
   const res = await fetch(`${url}/rest/v1/${name}?select=*&limit=1`, { headers });
