@@ -35,16 +35,8 @@ const headers = {
   Authorization: `Bearer ${anonKey}`,
 };
 
-const tables = [
-  'businesses',
-  'table_entries',
-  'saved_reports',
-  'regions',
-  'app_settings',
-  'couriers',
-  'motors',
-  'motor_maintenance',
-];
+const requiredTables = ['businesses', 'table_entries', 'saved_reports', 'regions', 'app_settings'];
+const optionalTables = ['couriers', 'motors', 'motor_maintenance'];
 
 async function checkTable(name: string): Promise<boolean> {
   const res = await fetch(`${url}/rest/v1/${name}?select=*&limit=1`, { headers });
@@ -57,11 +49,24 @@ async function checkTable(name: string): Promise<boolean> {
   return false;
 }
 
+async function checkOptionalTable(name: string): Promise<boolean> {
+  const res = await fetch(`${url}/rest/v1/${name}?select=*&limit=1`, { headers });
+  if (res.ok) {
+    console.log(`OK: tablo "${name}" erisilebilir`);
+    return true;
+  }
+  console.warn(`UYARI: tablo "${name}" yok — motor modulu icin 002_motor_tracking.sql calistirin`);
+  return false;
+}
+
 async function main() {
   console.log('Supabase URL:', url);
   let ok = true;
-  for (const t of tables) {
+  for (const t of requiredTables) {
     if (!(await checkTable(t))) ok = false;
+  }
+  for (const t of optionalTables) {
+    await checkOptionalTable(t);
   }
 
   if (appUrl) {

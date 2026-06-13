@@ -107,12 +107,13 @@ async function main() {
     console.warn('UYARI: Otomatik SQL calistirilamadi.');
     console.warn('  Secenek A: .env.local → SUPABASE_ACCESS_TOKEN (supabase.com/dashboard/account/tokens)');
     console.warn('  Secenek B: .env.local → DATABASE_URL (Supabase → Settings → Database)');
-    console.warn('  Secenek C: SQL Editor\'de supabase/migrations/*.sql calistirin');
+    console.warn('  Secenek C: SQL Editor\'de supabase/migrations/002_motor_tracking.sql calistirin');
     console.warn('  Tablolar zaten varsa deploy devam edebilir.');
-  }
-
-  if (applied && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    await saveHash(hash);
+  } else {
+    console.log('OK Migration uygulandi');
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      await saveHash(hash);
+    }
   }
 }
 
