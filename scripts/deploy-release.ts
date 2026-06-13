@@ -80,7 +80,8 @@ async function main() {
 
   if (process.env.VERCEL_TOKEN) {
     run('6/7 Vercel env sync', 'npx tsx scripts/sync-vercel-env.ts');
-    run('6b/7 Vercel fix + redeploy', 'npx tsx scripts/fix-vercel-project.ts', true);
+    run('6a/7 Vercel ayar fix', 'npx tsx scripts/fix-vercel-project.ts --no-redeploy', true);
+    run('6b/7 Vercel production deploy', 'npx tsx scripts/trigger-vercel-deploy.ts');
   } else {
     console.warn('\nUYARI: VERCEL_TOKEN yok — Vercel adimlari atlandi');
   }

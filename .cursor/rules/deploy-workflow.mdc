@@ -19,7 +19,7 @@ Bu komut sirasiyla:
 1. `npm test` + `npm run build`
 2. **GitHub** — commit + push (`GITHUB_TOKEN` .env.local'da)
 3. **Supabase** — migration gerekirse uygula + tablo kontrolu
-4. **Vercel** — env sync + framework fix + production redeploy
+4. **Vercel** — env sync + framework fix + production deploy (GitHub yoksa yerel kod)
 5. **Verify** — `deploy:verify` (fix-vercel + health check)
 
 Sadece soru/inceleme (kod degismeden) ise release calistirma; sadece `npm run deploy:verify` yeterli.
@@ -45,6 +45,7 @@ Sadece soru/inceleme (kod degismeden) ise release calistirma; sadece `npm run de
 | Komut | Ne zaman |
 |-------|----------|
 | `npm run release` | Kod degisikligi sonrasi (ana komut) |
+| `npm run deploy:vercel` | Sadece Vercel production deploy |
 | `npm run deploy:verify` | Sadece kontrol, push yok |
 | `npm run deploy:check` | Hizli saglik kontrolu |
 
