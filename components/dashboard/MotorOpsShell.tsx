@@ -5,10 +5,11 @@ import type { ReactNode } from 'react';
 
 interface MotorOpsShellProps {
   children: ReactNode;
+  canAccessDashboard?: boolean;
 }
 
 /** Operasyon sayfası — hakediş/dashboard menüsü yok */
-export function MotorOpsShell({ children }: MotorOpsShellProps) {
+export function MotorOpsShell({ children, canAccessDashboard = false }: MotorOpsShellProps) {
   return (
     <div className="motor-ops-layout">
       <header className="motor-ops-topbar">
@@ -18,9 +19,11 @@ export function MotorOpsShell({ children }: MotorOpsShellProps) {
             <span>Operasyon · Atama &amp; Kurye</span>
           </div>
           <div className="motor-ops-actions">
-            <Link href="/dashboard/motors" className="btn btn-outline-primary btn-sm">
-              Motorlar Sayfası
-            </Link>
+            {canAccessDashboard && (
+              <Link href="/dashboard/motors" className="btn btn-outline-primary btn-sm">
+                Motorlar Sayfası
+              </Link>
+            )}
             <form action="/auth/signout" method="post">
               <button type="submit" className="btn btn-secondary btn-sm">
                 Çıkış

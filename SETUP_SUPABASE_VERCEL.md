@@ -42,6 +42,31 @@ Bu rehberi sırayla takip edin. Değerleri aldıkça `.env.local` dosyasına yaz
 
 Bu email/şifre ile `/login` sayfasından giriş yapacaksınız.
 
+### 1.4b Motor operasyon kullanıcısı (sadece `/motor-yonetim`)
+
+Operasyon ekibine **hakediş ve dashboard erişimi vermeyin**. İki yöntemden biri:
+
+**Yöntem A — Supabase App Metadata (önerilen)**
+
+1. **Authentication** → **Users** → ilgili kullanıcı
+2. **App Metadata** alanına ekleyin:
+   ```json
+   { "role": "motor_ops" }
+   ```
+3. Tam yetkili admin için `{ "role": "full" }` veya metadata boş bırakın.
+
+**Yöntem B — Ortam değişkeni**
+
+`.env.local` ve Vercel Environment Variables:
+
+```
+MOTOR_OPS_EMAILS=operasyon1@firma.com,operasyon2@firma.com
+```
+
+Bu e-postalar giriş yaptığında yalnızca `/motor-yonetim` açılır; `/`, `/dashboard`, `/reports` otomatik engellenir.
+
+Operasyon giriş linki: `/login?portal=motor` veya doğrudan `/motor-yonetim` (login'e yönlendirir).
+
 ### 1.5 Auth URL ayarları (Vercel domain belli olunca tekrar güncellenir)
 
 **Authentication** → **URL Configuration**:

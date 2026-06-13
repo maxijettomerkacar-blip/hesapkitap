@@ -5,6 +5,7 @@ import {
   getActiveAssignmentsOnDate,
   getIdleMotors,
 } from '@/lib/motor-assignments';
+import { getUserRole } from '@/lib/auth/roles';
 import { todayISO } from '@/lib/formatters';
 import { createClient } from '@/lib/supabase/client';
 import { fetchMotorAuditLog } from '@/lib/supabase/motor-audit';
@@ -44,6 +45,15 @@ export function MotorOpsApp() {
   const [assignEnd, setAssignEnd] = useState('');
   const [assignNotes, setAssignNotes] = useState('');
   const [editAssignment, setEditAssignment] = useState<MotorAssignment | null>(null);
+  const [canAccessDashboard, setCanAccessDashboard] = useState(false);
+
+  useEffect(() => {
+    getSupabase()
+      .auth.getUser()
+      .then(({ data: { user } }) => {
+        if (user) setCanAccessDashboard(getUserRole(user) === 'full');
+      });
+  }, [getSupabase]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -147,14 +157,14 @@ export function MotorOpsApp() {
 
   if (loading) {
     return (
-      <MotorOpsShell>
+      <MotorOpsShell canAccessDashboard={canAccessDashboard}>
         <p className="loading-text">Yükleniyor...</p>
       </MotorOpsShell>
     );
   }
 
   return (
-    <MotorOpsShell>
+    <MotorOpsShell canAccessDashboard={canAccessDashboard}>
       <div className="motor-ops-date-bar">
         <label htmlFor="opsDate">Görüntüleme tarihi (anlık atama):</label>
         <input

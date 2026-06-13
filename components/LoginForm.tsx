@@ -1,15 +1,26 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { getUserRole, resolveSafeNextPath } from '@/lib/auth/roles';
 import { createClient } from '@/lib/supabase/client';
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const subtitle = useMemo(() => {
+    const next = searchParams.get('next');
+    const portal = searchParams.get('portal');
+    if (portal === 'motor' || next?.startsWith('/motor-yonetim')) {
+      return 'Motor Operasyon Girişi';
+    }
+    return 'Admin Girişi';
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +33,13 @@ export function LoginForm() {
       setLoading(false);
       return;
     }
-    router.push('/');
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const role = user ? getUserRole(user) : 'full';
+    const nextPath = resolveSafeNextPath(searchParams.get('next'), role);
+    router.push(nextPath);
     router.refresh();
   };
 
@@ -30,7 +47,7 @@ export function LoginForm() {
     <div className="login-container">
       <div className="login-card">
         <h1>MaxiHesaplama</h1>
-        <p className="login-subtitle">Admin Girişi</p>
+        <p className="login-subtitle">{subtitle}</p>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">E-posta</label>
