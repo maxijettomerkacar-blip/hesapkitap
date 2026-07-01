@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesyonel Hakediş Hesaplama</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1>İşletme Hakediş Hesaplama</h1>
+            <div class="controls-bar">
+                <div class="date-control">
+                    <label for="hesapTarihi">Hesap Tarihi:</label>
+                    <input type="date" id="hesapTarihi" title="Raporlarda kullanılacak hesap tarihi">
+                </div>
+                <div class="main-actions">
+                    <button id="dataManagementBtn" class="btn btn-secondary" title="Veri Yedekleme ve Geri Yükleme">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-lock-fill" viewBox="0 0 16 16">
+                            <path d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.775 11.775 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.158 7.158 0 0 0 1.048-.625 11.777 11.777 0 0 0 2.517-2.453c1.678-2.195 2.893-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm0 5a1.5 1.5 0 0 1 .5 2.915l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99A1.5 1.5 0 0 1 8 5z"/>
+                        </svg>
+                        Veri Yönetimi
+                    </button>
+                    <button id="openAddBusinessModalBtn" class="btn btn-primary" title="Listeye yeni bir işletme ve parametrelerini ekleyin">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                        </svg>
+                        Yeni İşletme Ekle
+                    </button>
+                    <button id="showSavedReportsBtn" class="btn btn-info" title="Kaydedilmiş tüm hakediş raporlarını görüntüleyin">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+                            <path d="M12.643 1.5H3.357C2.612 1.5 2 2.112 2 2.857v10.286c0 .745.612 1.357 1.357 1.357h9.286c.745 0 1.357-.612 1.357-1.357V2.857C14 2.112 13.388 1.5 12.643 1.5zM5.5 4a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                        Kayıtları Göster
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="region-filter-bar">
+            <div id="regionButtonsContainer" class="region-buttons">
+                <!-- Bölge butonları dinamik gelecek -->
+            </div>
+            <button id="addRegionBtn" class="btn btn-outline-primary btn-sm" title="Yeni bir bölge tanımlayın">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                </svg>
+                Bölge Ekle
+            </button>
+        </div>
+
+        <main class="content-area">
+            <div class="table-responsive">
+                <table id="calculationTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th title="Sıra Numarası">S/N</th>
+                            <th title="İşletmenin Adı">İŞLETME</th>
+                            <th title="0 ile 5 kilometre arası teslim edilen paket sayısı">0-5km P.</th>
+                            <th title="5 kilometreden uzak mesafeye teslim edilen paket sayısı">5+km P.</th>
+                            <th title="Toplam teslim edilen paket sayısı (0-5km + 5+km)">Toplam P.</th>
+                            <th title="Paketlerden elde edilen KDV hariç toplam kazanç">Hakediş (₺)</th>
+                            <th title="Hesaplanan Katma Değer Vergisi tutarı">KDV (₺)</th>
+                            <th title="Hakediş ve KDV dahil toplam brüt kazanç">KDV Dahil (₺)</th>
+                            <th title="İşletmeden kesilecek (veya eklenecek) banka komisyonu tutarı">Banka Kom. (₺)</th>
+                            <th title="İşletmenin bizdeki mevcut POS alacağı/borcu">Pos Bakiye (₺)</th>
+                            <th title="İşletmenin bizdeki mevcut nakit alacağı/borcu">Nakit (₺)</th>
+                            <th title="İşletmeye ödenecek veya işletmeden alınacak net tutar">Alacak/Verecek (₺)</th>
+                            <th title="Bu hesap dönemine ait ödemenin durumu">Ödeme Dur.</th>
+                            <th title="İşletmenin özel bir kotası olup olmadığı">Kota?</th>
+                            <th title="Bu hesaplamayla ilgili ek notlar">Açıklama</th>
+                            <th title="İşletme bilgilerini düzenle veya sil">İşlemler</th>
+                            <th title="Bu işletme için raporu kopyala veya hakedişi kaydet">Rapor / Kayıt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calculationTableBody">
+                        <!-- İşletme satırları buraya eklenecek -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Yeni İşletme Ekleme Modalı -->
+    <div id="addBusinessModalOverlay" class="modal-overlay">
+        <div id="addBusinessModalContent" class="modal-content-wrapper">
+            <div class="modal-header">
+                <h2 id="modalTitle">Yeni İşletme Ekle</h2>
+                <button class="modal-close-button" id="closeModalBtn" aria-label="Kapat" title="Bu pencereyi kapat">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editBusinessId">
+                <div class="form-group">
+                    <label for="businessName">İşletme Adı:</label>
+                    <input type="text" id="businessName" class="form-control" required title="İşletmenin tam adı">
+                </div>
+                <div class="form-group">
+                    <label for="normalPackageFee">Paket Başı Ücret (0-5km, ₺):</label>
+                    <input type="number" id="normalPackageFee" class="form-control" step="0.01" required title="Kısa mesafe (0-5km) her bir paket için alınacak ücret">
+                </div>
+                <div class="form-group">
+                    <label for="distantPackageFee">Uzak Mesafe Ücreti (5+km, ₺):</label>
+                    <input type="number" id="distantPackageFee" class="form-control" step="0.01" required title="Uzun mesafe (5+km) her bir paket için alınacak ücret">
+                </div>
+                <div class="form-group">
+                    <label for="vatRate">KDV Oranı (%):</label>
+                    <input type="number" id="vatRate" class="form-control" step="0.1" required title="Bu işletmeye uygulanacak Katma Değer Vergisi oranı (Örn: 20)">
+                </div>
+                <div class="form-group">
+                    <label for="businessRegion">İşletme Bölgesi:</label>
+                    <select id="businessRegion" class="form-control" required title="İşletmenin bağlı olduğu bölgeyi seçin">
+                        <!-- Bölgeler dinamik gelecek -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelModalBtn" class="btn btn-secondary" title="Değişiklikleri kaydetmeden kapat">İptal</button>
+                <button id="saveBusinessBtn" class="btn btn-success" title="İşletme bilgilerini kaydet">İşletmeyi Kaydet</button>
+            </div>
+        </div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>
